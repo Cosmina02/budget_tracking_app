@@ -1,4 +1,5 @@
 import 'package:budget_tracker/pages/homepage.dart';
+import 'package:budget_tracker/theme.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,9 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: myTheme,
       home: const HomePage(),
     );
   }

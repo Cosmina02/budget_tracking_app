@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:budget_tracker/static.dart' as Static;
 
 class AddTransaction extends StatefulWidget {
   const AddTransaction({Key? key}) : super(key: key);
@@ -9,6 +10,43 @@ class AddTransaction extends StatefulWidget {
 }
 
 class _AddTransactionState extends State<AddTransaction> {
+  int? amount;
+  String type = "Income";
+  String category = 'Category';
+  DateTime selectedDate = DateTime.now();
+  List<String> categories = [
+    'Category',
+    "Bills",
+    "Groceries",
+    "Entertainment",
+    "Other"
+  ];
+  List<String> months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2021, 12),
+        lastDate: DateTime(2100, 01));
+    if (picked != null && picked != selectedDate) {
+      selectedDate = picked;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +56,10 @@ class _AddTransactionState extends State<AddTransaction> {
         body: ListView(
           padding: EdgeInsets.all(12.0),
           children: [
-            Text(
+            const SizedBox(
+              height: 20.0,
+            ),
+            const Text(
               "Add Transaction",
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -26,105 +67,215 @@ class _AddTransactionState extends State<AddTransaction> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             Row(
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: Color.fromRGBO(165, 127, 186, 1),
+                      color: Static.PrimaryColor,
                       borderRadius: BorderRadius.circular(16.0)),
-                  padding: EdgeInsets.all(12.0),
-                  child: Icon(
+                  padding: const EdgeInsets.all(12.0),
+                  child: const Icon(
                     Icons.attach_money,
                     size: 24.0,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 12.0,
                 ),
                 Expanded(
                   child: TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "0",
                       border: InputBorder.none,
                     ),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24.0,
                     ),
+                    onChanged: (val) {
+                      try {
+                        amount = int.parse(val);
+                      } catch (e) {}
+                    },
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     keyboardType: TextInputType.number,
                   ),
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             Row(
-              //TODO:un selector pentru categorie in loc de nota pentru tranzactie
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: Color.fromRGBO(165, 127, 186, 1),
+                      color: Static.PrimaryColor,
                       borderRadius: BorderRadius.circular(16.0)),
-                  padding: EdgeInsets.all(12.0),
-                  child: Icon(
-                    Icons.description,
+                  padding: const EdgeInsets.all(12.0),
+                  child: const Icon(
+                    Icons.category_rounded,
                     size: 24.0,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 12.0,
                 ),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "Note on Transaction",
-                      border: InputBorder.none,
-                    ),
-                    style: TextStyle(
-                      fontSize: 24.0,
-                    ),
+                SizedBox(
+                  height: 24.0,
+                  width: 200.0,
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    // style: const TextStyle(fontSize: 6),
+                    value: category,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: [
+                      'Category',
+                      "Bills",
+                      "Groceries",
+                      "Entertainment",
+                      "Salary",
+                      "Other"
+                    ].map<DropdownMenuItem<String>>((String category) {
+                      return DropdownMenuItem<String>(
+                        value: category,
+                        child: Text(
+                          category,
+                          style: const TextStyle(fontSize: 22),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        category = newValue!;
+                      });
+                    },
                   ),
-                )
+                ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             Row(
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: Color.fromRGBO(165, 127, 186, 1),
+                      color: Static.PrimaryColor,
                       borderRadius: BorderRadius.circular(16.0)),
-                  padding: EdgeInsets.all(12.0),
-                  child: Icon(
+                  padding: const EdgeInsets.all(12.0),
+                  child: const Icon(
                     Icons.moving_sharp,
                     size: 24.0,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 12.0,
                 ),
                 ChoiceChip(
-                  label: Text("Income"),
+                  label: Text(
+                    "Income",
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        color: type == "Income" ? Colors.black : Colors.grey),
+                  ),
                   selectedColor: Color.fromRGBO(165, 127, 186, 1),
-                  selected: true,
+                  selected: type == "Income" ? true : false,
+                  onSelected: (val) {
+                    if (val) {
+                      setState(() {
+                        type = "Income";
+                      });
+                    }
+                  },
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 12.0,
                 ),
                 ChoiceChip(
-                  label: Text("Expense"),
-                  selected: false,
-                )
+                  label: Text(
+                    "Expense",
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        color: type == "Expense" ? Colors.black : Colors.grey),
+                  ),
+                  selectedColor: Color.fromRGBO(165, 127, 186, 1),
+                  selected: type == "Expense" ? true : false,
+                  onSelected: (val) {
+                    if (val) {
+                      setState(() {
+                        type = "Expense";
+                      });
+                    }
+                  },
+                ),
               ],
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            SizedBox(
+              height: 50.0,
+              child: TextButton(
+                  onPressed: () {
+                    _selectDate(context);
+                  },
+                  style: ButtonStyle(
+                      padding: MaterialStateProperty.all(EdgeInsets.zero)),
+                  child: Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Static.PrimaryColor,
+                            borderRadius: BorderRadius.circular(16.0)),
+                        padding: const EdgeInsets.all(12.0),
+                        child: const Icon(
+                          Icons.date_range,
+                          size: 24.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 12.0,
+                      ),
+                      Text(
+                        "${selectedDate.day} ${months[selectedDate.month - 1]}",
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Color.fromARGB(255, 92, 86, 86),
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            SizedBox(
+              height: 50.0,
+              child: ElevatedButton(
+                onPressed: () {
+                  print("Amnount=${amount}");
+                  print("Category=${category}");
+                  print("Type=${type}");
+                  print("Date=${selectedDate}");
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Static.PrimaryColor),
+                ),
+                child: const Text(
+                  "Add",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
             )
           ],
         ));
