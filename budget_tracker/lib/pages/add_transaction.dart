@@ -1,3 +1,4 @@
+import 'package:budget_tracker/controllers/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:budget_tracker/static.dart' as Static;
@@ -259,11 +260,15 @@ class _AddTransactionState extends State<AddTransaction> {
             SizedBox(
               height: 50.0,
               child: ElevatedButton(
-                onPressed: () {
-                  print("Amnount=${amount}");
-                  print("Category=${category}");
-                  print("Type=${type}");
-                  print("Date=${selectedDate}");
+                onPressed: () async {
+                  if (amount != null) {
+                    DbHelper dbHelper = DbHelper();
+                    await dbHelper.addData(
+                        amount!, selectedDate, category, type);
+                    Navigator.of(context).pop();
+                  } else {
+                    print("Not all values provided!");
+                  }
                 },
                 style: ButtonStyle(
                   backgroundColor:
