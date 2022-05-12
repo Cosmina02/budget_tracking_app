@@ -134,14 +134,8 @@ class _AddTransactionState extends State<AddTransaction> {
                     // style: const TextStyle(fontSize: 6),
                     value: category,
                     icon: const Icon(Icons.keyboard_arrow_down),
-                    items: [
-                      'Category',
-                      "Bills",
-                      "Groceries",
-                      "Entertainment",
-                      "Salary",
-                      "Other"
-                    ].map<DropdownMenuItem<String>>((String category) {
+                    items: categories
+                        .map<DropdownMenuItem<String>>((String category) {
                       return DropdownMenuItem<String>(
                         value: category,
                         child: Text(
