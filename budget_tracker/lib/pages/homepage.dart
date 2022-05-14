@@ -247,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15.0,
                       ),
                       Row(
@@ -286,6 +286,40 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ],
+                  ),
+                  Container(
+                    padding:
+                        EdgeInsets.only(left: 20.0, right: 180.0, top: 10.0),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.black87,
+                        backgroundColor: Color.fromARGB(203, 200, 168, 216),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          changedCat = false;
+                          changedMon = false;
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const [
+                          Text(
+                            "Remove filter",
+                            style: TextStyle(fontSize: 22.0),
+                          ),
+                          SizedBox(
+                            width: 8.0,
+                          ),
+                          Icon(
+                            Icons.cancel_outlined,
+                            size: 24.0,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   ListView.builder(
                       shrinkWrap: true,
@@ -382,33 +416,44 @@ Widget cardExpense(String value) {
 
 Widget expenseTile(int value, String category) {
   return Container(
-      margin: EdgeInsets.all(8.0),
-      padding: EdgeInsets.all(18.0),
+      margin: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(18.0),
       decoration: BoxDecoration(
           color: Color.fromARGB(94, 165, 127, 186),
           borderRadius: BorderRadius.circular(8.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
+          Column(
             children: [
-              Icon(
-                Icons.arrow_circle_up_outlined,
-                size: 28.0,
-                color: Colors.red[700],
+              Row(
+                children: [
+                  Icon(
+                    Icons.arrow_circle_up_outlined,
+                    size: 28.0,
+                    color: Colors.red[700],
+                  ),
+                  const SizedBox(
+                    width: 4.0,
+                  ),
+                  const Text(
+                    "Expense",
+                    style: TextStyle(fontSize: 20.0),
+                  )
+                ],
               ),
-              const SizedBox(
-                width: 4.0,
-              ),
-              const Text(
-                "Expense",
-                style: TextStyle(fontSize: 20.0),
+              Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: Text(
+                  category,
+                  style: const TextStyle(fontSize: 15.0),
+                ),
               )
             ],
           ),
           Text(
             "- $value lei",
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.w700,
             ),
@@ -427,25 +472,36 @@ Widget incomeTile(int value, String category) {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
+          Column(
             children: [
-              Icon(
-                Icons.arrow_circle_down_outlined,
-                size: 28.0,
-                color: Colors.green[700],
+              Row(
+                children: [
+                  Icon(
+                    Icons.arrow_circle_down_outlined,
+                    size: 28.0,
+                    color: Colors.green[700],
+                  ),
+                  const SizedBox(
+                    width: 4.0,
+                  ),
+                  const Text(
+                    "Income",
+                    style: TextStyle(fontSize: 20.0),
+                  )
+                ],
               ),
-              const SizedBox(
-                width: 4.0,
-              ),
-              const Text(
-                "Income",
-                style: TextStyle(fontSize: 20.0),
+              Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: Text(
+                  category,
+                  style: const TextStyle(fontSize: 15.0),
+                ),
               )
             ],
           ),
           Text(
             "+ $value lei",
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.w700,
             ),
