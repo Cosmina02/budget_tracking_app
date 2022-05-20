@@ -11,31 +11,31 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  DbHelper dbHelper = DbHelper();
-  int totalBalance = 0;
-  int totalIncome = 0;
-  int totalExpenses = 0;
-  String category = "Bills";
-  bool changedCat = false;
-  bool changedMon = false;
-  List<String> categories = ["Bills", "Groceries", "Entertainment", "Other"];
-  int choosenMonth = DateTime.now().month;
-  List<String> months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec"
-  ];
+DbHelper dbHelper = DbHelper();
+int totalBalance = 0;
+int totalIncome = 0;
+int totalExpenses = 0;
+String category = "Bills";
+bool changedCat = false;
+bool changedMon = false;
+List<String> categories = ["Bills", "Groceries", "Entertainment", "Other"];
+int choosenMonth = DateTime.now().month;
+List<String> months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec"
+];
 
+class _HomePageState extends State<HomePage> {
   getTotalBalance(Map entireData) {
     totalBalance = 0;
     totalIncome = 0;
@@ -53,6 +53,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentWidth = MediaQuery.of(context).size.width;
+    print(currentWidth);
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: 0.0,
@@ -97,247 +99,312 @@ class _HomePageState extends State<HomePage> {
                 ));
               }
               getTotalBalance(snapshot.data!);
-              return ListView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  color: Colors.white70,
-                                ),
-                                padding: const EdgeInsets.all(12.0),
-                                child: const CircleAvatar(
-                                  maxRadius: 32.0,
-                                  child: Icon(
-                                    Icons.person,
-                                    size: 32.0,
-                                    color: Color(0xff3E454C),
-                                  ),
-                                )),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            Text(
-                              "Welcome",
-                              style: TextStyle(
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.w700,
-                                color: Static.PrimaryMaterialColor[800],
-                              ),
-                            )
-                          ],
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.0),
-                            color: Colors.white70,
-                          ),
-                          padding: const EdgeInsets.all(12.0),
-                          child: const Icon(
-                            Icons.settings,
-                            size: 32.0,
-                            color: Color(0xff3E454C),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    margin: const EdgeInsets.all(12.0),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Static.PrimaryColor, Colors.blueAccent],
-                          ),
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(24.0))),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
-                      child: Column(children: [
-                        const Text(
-                          'Total Balance',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 22.0, color: Colors.white),
-                        ),
-                        const SizedBox(
-                          height: 12.0,
-                        ),
-                        Text(
-                          '$totalBalance lei',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white),
-                        ),
-                        const SizedBox(
-                          height: 12.0,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                cardIncome(totalIncome.toString()),
-                                cardExpense(totalExpenses.toString())
-                              ],
-                            ))
-                      ]),
-                    ),
-                  ),
-                  const Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text("Recent Transactions",
-                          style: TextStyle(
-                            fontSize: 32.0,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w900,
-                          ))),
-                  const Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text("Filter by:",
-                          style: TextStyle(
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.w500,
-                          ))),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    textDirection: TextDirection.ltr,
-                    children: [
-                      Row(
-                        children: [
-                          const SizedBox(width: 15.0),
-                          const Text(
-                            "Category: ",
-                            style: TextStyle(fontSize: 23.0),
-                          ),
-                          SizedBox(width: 15.0),
-                          SizedBox(
-                            height: 24.0,
-                            width: 200.0,
-                            child: DropdownButton<String>(
-                              isExpanded: true,
-                              // style: const TextStyle(fontSize: 6),
-                              value: category,
-                              icon: const Icon(Icons.keyboard_arrow_down),
-                              items: categories.map<DropdownMenuItem<String>>(
-                                  (String category) {
-                                return DropdownMenuItem<String>(
-                                  value: category,
-                                  child: Text(
-                                    category,
-                                    style: const TextStyle(fontSize: 22),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  category = newValue!;
-                                  changedCat = true;
-                                });
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
-                      Row(
-                        children: [
-                          const SizedBox(width: 15.0),
-                          const Text(
-                            "Month: ",
-                            style: TextStyle(fontSize: 23.0),
-                          ),
-                          SizedBox(width: 15.0),
-                          SizedBox(
-                            height: 24.0,
-                            width: 200.0,
-                            child: DropdownButton<String>(
-                              isExpanded: true,
-                              value: months[choosenMonth - 1],
-                              icon: const Icon(Icons.keyboard_arrow_down),
-                              items: months.map<DropdownMenuItem<String>>(
-                                  (String month) {
-                                return DropdownMenuItem<String>(
-                                  value: month,
-                                  child: Text(
-                                    month,
-                                    style: const TextStyle(fontSize: 22),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  choosenMonth = months.indexOf(newValue!) + 1;
-                                  changedMon = true;
-                                });
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding:
-                        EdgeInsets.only(left: 20.0, right: 180.0, top: 10.0),
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.black87,
-                        backgroundColor: Color.fromARGB(203, 200, 168, 216),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          changedCat = false;
-                          changedMon = false;
-                        });
-                      },
+
+              if (currentWidth > 760) {
+                return Column(
+                  children: [
+                    welcomeCard(),
+                    Expanded(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
-                          Text(
-                            "Remove filter",
-                            style: TextStyle(fontSize: 22.0),
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              balanceCard(currentWidth, totalBalance,
+                                  totalIncome, totalExpenses),
+                            ],
                           ),
                           SizedBox(
-                            width: 8.0,
-                          ),
-                          Icon(
-                            Icons.cancel_outlined,
-                            size: 24.0,
-                          ),
+                            width: currentWidth * 0.6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                    padding: EdgeInsets.all(12.0),
+                                    child: Text("Recent Transactions",
+                                        style: TextStyle(
+                                          fontSize: 28.0,
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.w900,
+                                        ))),
+                                const Padding(
+                                    padding: EdgeInsets.all(12.0),
+                                    child: Text("Filter by:",
+                                        style: TextStyle(
+                                          fontSize: 25.0,
+                                          fontWeight: FontWeight.w500,
+                                        ))),
+                                Container(
+                                    padding: EdgeInsets.only(bottom: 10.0),
+                                    child: filters()),
+                                Expanded(child: transaction_list(snapshot)),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
-                  ),
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: ((context, index) {
-                        Map dataAtIndex = snapshot.data![index];
-                        return verify(dataAtIndex, changedCat, category,
-                            changedMon, choosenMonth);
-                      }))
-                ],
-              );
+                  ],
+                );
+              } else {
+                return ListView(
+                  children: [
+                    welcomeCard(),
+                    balanceCard(
+                        currentWidth, totalBalance, totalIncome, totalExpenses),
+                    const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text("Recent Transactions",
+                            style: TextStyle(
+                              fontSize: 32.0,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w900,
+                            ))),
+                    const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text("Filter by:",
+                            style: TextStyle(
+                              fontSize: 25.0,
+                              fontWeight: FontWeight.w500,
+                            ))),
+                    Container(
+                        padding: EdgeInsets.only(bottom: 10.0),
+                        child: filters()),
+                    transaction_list(snapshot)
+                  ],
+                );
+              }
             } else {
               return Center(child: Text('Unexpected error!'));
             }
           },
         ));
   }
+
+  Column filters() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      // mainAxisAlignment: MainAxisAlignment.start,
+      textDirection: TextDirection.ltr,
+      children: [
+        Row(
+          children: [
+            const SizedBox(width: 15.0),
+            const Text(
+              "Category: ",
+              style: TextStyle(fontSize: 23.0),
+            ),
+            SizedBox(width: 15.0),
+            SizedBox(
+              height: 24.0,
+              width: 200.0,
+              child: DropdownButton<String>(
+                isExpanded: true,
+                // style: const TextStyle(fontSize: 6),
+                value: category,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items:
+                    categories.map<DropdownMenuItem<String>>((String category) {
+                  return DropdownMenuItem<String>(
+                    value: category,
+                    child: Text(
+                      category,
+                      style: const TextStyle(fontSize: 22),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    category = newValue!;
+                    changedCat = true;
+                  });
+                },
+              ),
+            )
+          ],
+        ),
+        const SizedBox(
+          height: 15.0,
+        ),
+        Row(
+          children: [
+            const SizedBox(width: 15.0),
+            const Text(
+              "Month: ",
+              style: TextStyle(fontSize: 23.0),
+            ),
+            SizedBox(width: 15.0),
+            SizedBox(
+              height: 24.0,
+              width: 200.0,
+              child: DropdownButton<String>(
+                isExpanded: true,
+                value: months[choosenMonth - 1],
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: months.map<DropdownMenuItem<String>>((String month) {
+                  return DropdownMenuItem<String>(
+                    value: month,
+                    child: Text(
+                      month,
+                      style: const TextStyle(fontSize: 22),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    choosenMonth = months.indexOf(newValue!) + 1;
+                    changedMon = true;
+                  });
+                },
+              ),
+            )
+          ],
+        ),
+        Container(
+          width: 200,
+          padding: EdgeInsets.only(left: 20.0, top: 10.0),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+          child: TextButton(
+            style: TextButton.styleFrom(
+              primary: Colors.black87,
+              backgroundColor: Color.fromARGB(203, 200, 168, 216),
+            ),
+            onPressed: () {
+              setState(() {
+                changedCat = false;
+                changedMon = false;
+              });
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: const [
+                Text(
+                  "Remove filter",
+                  style: TextStyle(fontSize: 22.0),
+                ),
+                SizedBox(
+                  width: 8.0,
+                ),
+                Icon(
+                  Icons.cancel_outlined,
+                  size: 24.0,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  ListView transaction_list(AsyncSnapshot<Map<dynamic, dynamic>> snapshot) {
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: snapshot.data!.length,
+        itemBuilder: ((context, index) {
+          Map dataAtIndex = snapshot.data![index];
+          return verify(
+              dataAtIndex, changedCat, category, changedMon, choosenMonth);
+        }));
+  }
+}
+
+Widget welcomeCard() {
+  return Padding(
+    padding: const EdgeInsets.all(12.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                  color: Colors.white70,
+                ),
+                padding: const EdgeInsets.all(12.0),
+                child: const CircleAvatar(
+                  maxRadius: 32.0,
+                  child: Icon(
+                    Icons.person,
+                    size: 32.0,
+                    color: Color(0xff3E454C),
+                  ),
+                )),
+            const SizedBox(
+              width: 8.0,
+            ),
+            Text(
+              "Welcome",
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.w700,
+                color: Static.PrimaryMaterialColor[800],
+              ),
+            )
+          ],
+        ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0),
+            color: Colors.white70,
+          ),
+          padding: const EdgeInsets.all(12.0),
+          child: const Icon(
+            Icons.settings,
+            size: 32.0,
+            color: Color(0xff3E454C),
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Widget balanceCard(
+    double currentWidth, int totalBalance, int totalIncome, int totalExpense) {
+  return Container(
+    width: currentWidth > 700 ? currentWidth * 0.3 : currentWidth * 0.9,
+    margin: const EdgeInsets.all(12.0),
+    child: Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Static.PrimaryColor, Colors.blueAccent],
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
+      child: Column(children: [
+        const Text(
+          'Total Balance',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 22.0, color: Colors.white),
+        ),
+        const SizedBox(
+          height: 12.0,
+        ),
+        Text(
+          '$totalBalance lei',
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+              fontSize: 22.0, fontWeight: FontWeight.w700, color: Colors.white),
+        ),
+        const SizedBox(
+          height: 12.0,
+        ),
+        Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                cardIncome(totalIncome.toString()),
+                cardExpense(totalExpense.toString())
+              ],
+            ))
+      ]),
+    ),
+  );
 }
 
 Widget cardIncome(String value) {
@@ -464,6 +531,7 @@ Widget expenseTile(int value, String category) {
 
 Widget incomeTile(int value, String category) {
   return Container(
+      width: 300,
       margin: EdgeInsets.all(8.0),
       padding: EdgeInsets.all(18.0),
       decoration: BoxDecoration(
