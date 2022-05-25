@@ -1,4 +1,5 @@
 import 'package:budget_tracker/pages/homepage.dart';
+import 'package:budget_tracker/pages/splash.dart';
 import 'package:budget_tracker/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: myTheme,
-      home: const HomePage(),
+      home: const Splash(),
     );
   }
 }

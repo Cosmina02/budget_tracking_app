@@ -3,6 +3,7 @@ import 'package:budget_tracker/pages/add_transaction.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:budget_tracker/static.dart' as Static;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,31 +12,37 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-DbHelper dbHelper = DbHelper();
-int totalBalance = 0;
-int totalIncome = 0;
-int totalExpenses = 0;
-String category = "Bills";
-bool changedCat = false;
-bool changedMon = false;
-List<String> categories = ["Bills", "Groceries", "Entertainment", "Other"];
-int choosenMonth = DateTime.now().month;
-List<String> months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec"
-];
-
 class _HomePageState extends State<HomePage> {
+  late SharedPreferences preferences;
+
+  DbHelper dbHelper = DbHelper();
+  int totalBalance = 0;
+  int totalIncome = 0;
+  int totalExpenses = 0;
+  String category = "Bills";
+  bool changedCat = false;
+  bool changedMon = false;
+  List<String> categories = ["Bills", "Groceries", "Entertainment", "Other"];
+  int choosenMonth = DateTime.now().month;
+  List<String> months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+
+  getPreference() async {
+    preferences = await SharedPreferences.getInstance();
+  }
+
   getTotalBalance(Map entireData) {
     totalBalance = 0;
     totalIncome = 0;
@@ -54,7 +61,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
-    print(currentWidth);
+    // print(currentWidth);
+    getPreference();
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: 0.0,
@@ -92,7 +100,7 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.data!.isEmpty) {
                 return const Center(
                     child: Text(
-                  "Unexpected error!",
+                  "No data added,please add a transaction!",
                   style: TextStyle(
                     fontSize: 24.0,
                   ),
@@ -103,7 +111,7 @@ class _HomePageState extends State<HomePage> {
               if (currentWidth > 760) {
                 return Column(
                   children: [
-                    welcomeCard(),
+                    welcomeCard(preferences),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -150,7 +158,7 @@ class _HomePageState extends State<HomePage> {
               } else {
                 return ListView(
                   children: [
-                    welcomeCard(),
+                    welcomeCard(preferences),
                     balanceCard(
                         currentWidth, totalBalance, totalIncome, totalExpenses),
                     const Padding(
@@ -311,7 +319,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget welcomeCard() {
+Widget welcomeCard(SharedPreferences preferences) {
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Row(
@@ -337,7 +345,7 @@ Widget welcomeCard() {
               width: 8.0,
             ),
             Text(
-              "Welcome",
+              "Welcome ${preferences.getString('name')}",
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.w700,
